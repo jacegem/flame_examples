@@ -1,6 +1,6 @@
 {
-    "name": "mazeball",
-    "short_name": "mazeball",
+    "name": "Mazeball",
+    "short_name": "Mazeball",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
