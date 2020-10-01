@@ -5,83 +5,99 @@ import 'package:flutter/services.dart';
 
 import 'package:trex/game/game.dart';
 
-void main() {
-  runApp(MaterialApp(
-    title: 'TRexGame',
-    color: Colors.white,
-    debugShowCheckedModeBanner: false,
-    home: Scaffold(
-      body: TRexGameWrapper(),
-    ),
-  ));
+import 'bob/asset.dart';
+import 'bob/bob_game.dart';
 
-  Flame.util.fullScreen();
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await Flame.init(fullScreen: true, orientation: DeviceOrientation.portraitUp);
+  await loadAsset();
+
+  final size = await Flame.util.initialDimensions();
+  final BobGame game = BobGame(size);
+  runApp(game.widget);
 }
 
-class TRexGameWrapper extends StatefulWidget {
-  @override
-  _TRexGameWrapperState createState() => _TRexGameWrapperState();
+Future<void> loadAsset() async {
+  Asset.bob = await Flame.images.load("bob.png");
 }
 
-class _TRexGameWrapperState extends State<TRexGameWrapper> {
-  bool splashGone = false;
-  TRexGame game;
-  final _focusNode = FocusNode();
+// void main() {
+//   runApp(MaterialApp(
+//     title: 'TRexGame',
+//     color: Colors.white,
+//     debugShowCheckedModeBanner: false,
+//     home: Scaffold(
+//       body: TRexGameWrapper(),
+//     ),
+//   ));
 
-  @override
-  void initState() {
-    super.initState();
-    startGame();
-  }
+//   Flame.util.fullScreen();
+// }
 
-  void startGame() {
-    Flame.images.loadAll(["sprite.png"]).then((image) => {
-      setState(() {
-        game = TRexGame(spriteImage: image[0]);
-        _focusNode.requestFocus();
-      })
+// class TRexGameWrapper extends StatefulWidget {
+//   @override
+//   _TRexGameWrapperState createState() => _TRexGameWrapperState();
+// }
 
-    });
-  }
+// class _TRexGameWrapperState extends State<TRexGameWrapper> {
+//   bool splashGone = false;
+//   TRexGame game;
+//   final _focusNode = FocusNode();
 
-  @override
-  Widget build(BuildContext context) {
-    return splashGone
-        ? _buildGame(context)
-        : FlameSplashScreen(
-      theme: FlameSplashTheme.white,
-      onFinish: (context) {
-        setState(() {
-          splashGone = true;
-        });
-      },
-    );
-  }
+//   @override
+//   void initState() {
+//     super.initState();
+//     startGame();
+//   }
 
-  void _onRawKeyEvent(RawKeyEvent event) {
-    if(event.logicalKey == LogicalKeyboardKey.enter || event.logicalKey == LogicalKeyboardKey.space) {
-      game.onAction();
-    }
-  }
+//   void startGame() {
+//     Flame.images.loadAll(["sprite.png"]).then((image) => {
+//           setState(() {
+//             game = TRexGame(spriteImage: image[0]);
+//             _focusNode.requestFocus();
+//           })
+//         });
+//   }
 
-  Widget _buildGame(BuildContext context) {
+//   @override
+//   Widget build(BuildContext context) {
+//     return splashGone
+//         ? _buildGame(context)
+//         : FlameSplashScreen(
+//             theme: FlameSplashTheme.white,
+//             onFinish: (context) {
+//               setState(() {
+//                 splashGone = true;
+//               });
+//             },
+//           );
+//   }
 
-    if (game == null) {
-      return const Center(
-        child: Text("Loading"),
-      );
-    }
-    return Container(
-      color: Colors.white,
-      constraints: const BoxConstraints.expand(),
-      child: Container(
-          child: RawKeyboardListener(
-            key: ObjectKey("neh"),
-            child: game.widget,
-            focusNode: _focusNode,
-            onKey: _onRawKeyEvent,
-          )
-      ),
-    );
-  }
-}
+//   void _onRawKeyEvent(RawKeyEvent event) {
+//     if (event.logicalKey == LogicalKeyboardKey.enter ||
+//         event.logicalKey == LogicalKeyboardKey.space) {
+//       game.onAction();
+//     }
+//   }
+
+//   Widget _buildGame(BuildContext context) {
+//     if (game == null) {
+//       return const Center(
+//         child: Text("Loading"),
+//       );
+//     }
+//     return Container(
+//       color: Colors.white,
+//       constraints: const BoxConstraints.expand(),
+//       child: Container(
+//           child: RawKeyboardListener(
+//         key: const ObjectKey("neh"),
+//         child: game.widget,
+//         focusNode: _focusNode,
+//         onKey: _onRawKeyEvent,
+//       )),
+//     );
+//   }
+// }

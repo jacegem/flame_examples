@@ -15,6 +15,7 @@ class Ball extends BodyComponent {
 //Rectangle based on the size, easy to use
   Rect _screenRect;
   final int scale = 5;
+  BodyDef bodyDef;
 
   //Initial acceleration -> no movement as its (0,0)
   Vector2 acceleration = Vector2.zero();
@@ -24,11 +25,11 @@ class Ball extends BodyComponent {
     currentPaint = originalPaint;
 
     final worldPosition = viewport.getScreenToWorld(position);
-    // _createBody(5.0, worldPosition);
+    _createBody(5.0, worldPosition);
     print('position: $position');
     print('worldPosition: $worldPosition');
 
-    _create2(worldPosition);
+    // _create2(worldPosition);
   }
 
   Paint _randomPaint() {
@@ -75,6 +76,13 @@ class Ball extends BodyComponent {
     // });
   }
 
+  void moveTo(Vector2 position) {
+    print('moveTo $position');
+
+    Vector2 worldPosition = viewport.getScreenToWorld(position);
+    bodyDef.setPosition(worldPosition);
+  }
+
   void _createBody(double radius, Vector2 position) {
     final CircleShape shape = CircleShape();
     shape.radius = radius;
@@ -85,7 +93,7 @@ class Ball extends BodyComponent {
       ..density = 1.0
       ..friction = 0.1;
 
-    final bodyDef = BodyDef()
+    bodyDef = BodyDef()
       // To be able to determine object in collision
       ..setUserData(this)
       ..position = position
@@ -107,31 +115,31 @@ class Ball extends BodyComponent {
     super.resize(size);
   }
 
-  // @override
-  // void renderCircle(Canvas c, Offset p, double radius) {
-  //   print('renderCircle: $c');
+  @override
+  void renderCircle(Canvas c, Offset p, double radius) {
+    print('renderCircle: $p');
 
-  //   final blue = const PaletteEntry(Colors.blue).paint;
-  //   c.drawCircle(p, radius, currentPaint);
+    final blue = const PaletteEntry(Colors.blue).paint;
+    c.drawCircle(p, radius, currentPaint);
 
-  //   final angle = body.getAngle();
-  //   final lineRotation =
-  //       Offset(math.sin(angle) * radius, math.cos(angle) * radius);
-  //   c.drawLine(p, p + lineRotation, blue);
-  // }
+    final angle = body.getAngle();
+    final lineRotation =
+        Offset(math.sin(angle) * radius, math.cos(angle) * radius);
+    c.drawLine(p, p + lineRotation, blue);
+  }
 
   //Draw the ball
-  void render(Canvas c) {
-    print('render: $c');
+  // void render(Canvas c) {
+  //   print('render: $c');
 
-    c.save();
-    //Move the canvas point 0,0 to the top left edge of our ball
-    c.translate(body.position.x, body.position.y);
-    print('${body.position.x}, ${body.position.y}');
-    //Simply draw the circle
-    c.drawCircle(Offset(0, 0), .1, paint);
-    c.restore();
-  }
+  //   c.save();
+  //   //Move the canvas point 0,0 to the top left edge of our ball
+  //   c.translate(body.position.x, body.position.y);
+  //   print('${body.position.x}, ${body.position.y}');
+  //   //Simply draw the circle
+  //   c.drawCircle(Offset(0, 0), .1, paint);
+  //   c.restore();
+  // }
 
   void update(double t) {
     //Our ball has to move, every frame by its accelartion. If frame rates drop it will move slower...

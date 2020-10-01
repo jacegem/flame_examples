@@ -1,32 +1,13 @@
 import 'dart:ui';
 
-import 'package:flame/components/component.dart';
+import 'package:box2d_simple/trex/trex.dart';
+import 'package:box2d_simple/trex/trex_config.dart';
 import 'package:flame/components/mixins/resizable.dart';
 import 'package:flame/components/mixins/tapable.dart';
-import 'package:flame/game.dart';
 import 'package:flame/gestures.dart';
-import 'package:trex/game/horizon/horizon.dart';
-import 'package:trex/game/collision/collision_utils.dart';
-import 'package:trex/game/game_config.dart';
-import 'package:trex/game/game_over/game_over.dart';
-import 'package:trex/game/t_rex/config.dart';
-import 'package:trex/game/t_rex/t_rex.dart';
 
-class Bg extends Component with Resizable {
-  Bg();
-
-  final Paint _paint = Paint()..color = const Color(0xffffffff);
-
-  @override
-  void render(Canvas c) {
-    print('${size.width}, ${size.height}');
-    final rect = Rect.fromLTWH(0, 0, size.width, size.height);
-    c.drawRect(rect, _paint);
-  }
-
-  @override
-  void update(double t) {}
-}
+import 'bg.dart';
+import 'game_config.dart';
 
 enum TRexGameStatus { playing, waiting, gameOver }
 
