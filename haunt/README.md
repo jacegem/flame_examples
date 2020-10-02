@@ -1,6 +1,6 @@
 # haunt
 
-A new Flutter project.
+- https://github.com/feroult/haunt
 
 ## Getting Started
 
