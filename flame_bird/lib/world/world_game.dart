@@ -9,11 +9,13 @@ import 'package:flame/flame.dart';
 import 'package:flame/gestures.dart';
 import 'package:flame/palette.dart';
 import 'package:flame_bird/world/backyard.dart';
+import 'package:flame_bird/world/square.dart';
 import 'package:flame_bird/world/wall.dart';
 import 'package:flutter/material.dart';
 import 'package:box2d_flame/box2d.dart';
 
 import 'ball.dart';
+import 'bird.dart';
 
 class WorldGame extends Game with TapDetector {
   World world;
@@ -21,14 +23,21 @@ class WorldGame extends Game with TapDetector {
   Wall wall;
   List<Ball> balls = [];
   Backyard backyard;
+  Bird bird;
+  Square square;
 
   WorldGame(this.size) {
-    world = World.withPool(
+    // world = World.withPool(
+    //   Vector2(0, 10),
+    //   DefaultWorldPool(100, 10),
+    // );
+    world = World.withGravity(
       Vector2(0, 10),
-      DefaultWorldPool(100, 10),
     );
     wall = Wall(size);
     backyard = Backyard(this);
+    bird = Bird(this);
+    square = Square(this, 0.1);
   }
 
   @override
@@ -40,7 +49,8 @@ class WorldGame extends Game with TapDetector {
     print(position);
     // position = Vector2(10, 20);
     // add(Ball(position, box));
-    balls.add(Ball(this, position));
+    // balls.add(Ball(this, position));
+    bird.jump();
   }
 
   @override
@@ -49,6 +59,8 @@ class WorldGame extends Game with TapDetector {
     backyard.render(c);
     wall.render(c);
     balls.forEach((Ball b) => b.render(c));
+    // square.render(c);
+    bird.render(c);
     c.restore();
   }
 
@@ -60,5 +72,8 @@ class WorldGame extends Game with TapDetector {
 
     world.stepDt(t, 100, 100);
     balls.forEach((Ball b) => b.update(t));
+
+    square.update(t);
+    bird.update(t);
   }
 }
