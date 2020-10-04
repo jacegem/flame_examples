@@ -9,6 +9,7 @@ import 'package:flame/flame.dart';
 import 'package:flame/gestures.dart';
 import 'package:flame/palette.dart';
 import 'package:flame_bird/world/backyard.dart';
+import 'package:flame_bird/world/pipe.dart';
 import 'package:flame_bird/world/square.dart';
 import 'package:flame_bird/world/wall.dart';
 import 'package:flutter/material.dart';
@@ -28,6 +29,7 @@ class WorldGame extends Game with TapDetector {
   double gravity = 10;
   double scaleX = 10;
   double scaleY;
+  List<Pipe> pipes = [];
 
   WorldGame(this.size) {
     // world = World.withPool(
@@ -57,6 +59,12 @@ class WorldGame extends Game with TapDetector {
     // add(Ball(position, box));
     // balls.add(Ball(this, position));
     bird.jump();
+
+    spawnPipe();
+  }
+
+  void spawnPipe() {
+    pipes.add(Pipe(this));
   }
 
   @override
@@ -69,6 +77,7 @@ class WorldGame extends Game with TapDetector {
     balls.forEach((Ball b) => b.render(c));
     // square.render(c);
     bird.render(c);
+    pipes.forEach((Pipe p) => p.render(c));
     c.restore();
   }
 
@@ -82,5 +91,6 @@ class WorldGame extends Game with TapDetector {
     balls.forEach((Ball b) => b.update(t));
     square.update(t);
     bird.update(t);
+    pipes.forEach((Pipe p) => p.update(t));
   }
 }
