@@ -6,6 +6,7 @@ import 'package:flame/components/animation_component.dart';
 import 'package:flame/components/component.dart';
 import 'package:flame/position.dart';
 import 'package:flame_bird/world/world_game.dart';
+import 'package:flutter/material.dart' hide Animation;
 
 class Bird {
   WorldGame game;
@@ -31,23 +32,23 @@ class Bird {
     // setByPosition(position);
 
     var pos = Vector2(game.size.width / 2, game.size.height / 2);
-    createBody(SIZE / 2, pos);
+    createBody(1.0, pos);
   }
 
-  void createBody(radius, position) {
+  void createBody(double radius, position) {
     final CircleShape shape = CircleShape();
     shape.radius = radius;
 
     final fixtureDef = FixtureDef()
       ..shape = shape
-      ..restitution = 1.0
-      ..density = 99.0
+      ..restitution = 0
+      ..density = 1.0
       ..friction = 0.1;
 
     final bodyDef = BodyDef()
       // To be able to determine object in collision
       ..setUserData(this)
-      ..position = position
+      ..position = Vector2(game.scaleX / 2, 2)
       ..type = BodyType.DYNAMIC;
 
     body = game.world.createBody(bodyDef)
@@ -57,12 +58,23 @@ class Bird {
   void render(Canvas c) {
     // prepareCanvas(c);
     c.save();
-    c.translate(body.position.x, body.position.y);
-    c.rotate(angle);
-    var pos = Position(body.position.x, body.position.y);
-    pos = Position(0, 0);
-    ani?.getSprite()?.renderCentered(c, pos, size: Position(SIZE, SIZE));
+    var center = body.worldCenter;
+    print('bird center : ${body.position.x}, ${center.y}');
+    c.translate(center.x, center.y);
+    c.rotate(angle * 2);
 
+    var paint = Paint()..color = Colors.red;
+    c.drawCircle(Offset.zero, 1, paint);
+
+    // var pos = Position(body.position.x, body.position.y);
+    var pos = Position(0, 0);
+    ani?.getSprite()?.renderCentered(c, pos, size: Position(2, 2));
+
+    // var rect =
+    //     Rect.fromCenter(center: Offset.zero, width: game.scaleX - 2, height: 1);
+    // var rect = Rect.fromLTWH(100, 100, 100, 100);
+    // var bgColor = Paint()..color = Colors.red;
+    // c.drawRect(rect, bgColor);
     // var rect = Rect.fromLTWH(body.position.x, body.position.y, SIZE, SIZE);
     // print(rect);
     // ani.getSprite().renderRect(c, rect);
@@ -96,14 +108,15 @@ class Bird {
   void jump() {
     // angle -= SPEED;
 
+    body.linearVelocity = Vector2.zero();
+
     MassData data = MassData();
     body.getMassData(data);
 
     var impulse = Vector2(
       data.mass * 0,
-      data.mass * -900,
+      data.mass * -game.world.getGravity().y,
     );
-
-    body.applyLinearImpulse(impulse, body.position, true);
+    body.applyLinearImpulse(impulse, body.worldCenter, true);
   }
 }

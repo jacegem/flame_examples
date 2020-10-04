@@ -25,6 +25,9 @@ class WorldGame extends Game with TapDetector {
   Backyard backyard;
   Bird bird;
   Square square;
+  double gravity = 10;
+  double scaleX = 10;
+  double scaleY;
 
   WorldGame(this.size) {
     // world = World.withPool(
@@ -32,9 +35,12 @@ class WorldGame extends Game with TapDetector {
     //   DefaultWorldPool(100, 10),
     // );
     world = World.withGravity(
-      Vector2(0, 10),
+      Vector2(0, gravity),
     );
-    wall = Wall(size);
+
+    scaleY = size.height / (size.width / scaleX);
+
+    wall = Wall(this);
     backyard = Backyard(this);
     bird = Bird(this);
     square = Square(this, 0.1);
@@ -56,6 +62,8 @@ class WorldGame extends Game with TapDetector {
   @override
   void render(Canvas c) {
     c.save();
+    c.scale(size.width / scaleX, size.height / scaleY);
+
     backyard.render(c);
     wall.render(c);
     balls.forEach((Ball b) => b.render(c));
@@ -72,7 +80,6 @@ class WorldGame extends Game with TapDetector {
 
     world.stepDt(t, 100, 100);
     balls.forEach((Ball b) => b.update(t));
-
     square.update(t);
     bird.update(t);
   }

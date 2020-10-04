@@ -12,8 +12,8 @@ class Backyard {
     bgRect = Rect.fromLTWH(
       0,
       0,
-      game.size.width,
-      game.size.height,
+      game.scaleX,
+      game.scaleY,
     );
   }
 
