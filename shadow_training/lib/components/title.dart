@@ -4,14 +4,14 @@ import 'package:flame/sprite.dart';
 
 import '../shadow_training.dart';
 
-class Background {
+class Title {
   final ShadowTraining game;
-  Rect rect;
   Sprite sprite;
+  Rect rect;
 
-  Background(this.game) {
-    rect = Rect.fromLTWH(0, -22, 9, 22);
-    sprite = Sprite('background.png');
+  Title(this.game) {
+    sprite = Sprite('title.png');
+    rect = Rect.fromLTWH(1, game.screenHeight * -.775, 7, 3);
   }
 
   void render(Canvas c) {

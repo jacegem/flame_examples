@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shadow_training/shadow_training_ui.dart';
 
+import 'bgm.dart';
 import 'shadow_training.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await Flame.util.fullScreen();
   await Flame.util.setOrientation(DeviceOrientation.portraitUp);
   await Flame.images.loadAll(<String>[
@@ -20,8 +22,19 @@ void main() async {
     'title.png',
   ]);
 
+  List<String> audioList = ['bgm.ogg'];
+  for (int i = 1; i <= 13; i++) {
+    audioList.add('swish-$i.ogg');
+  }
+  await Flame.audio.loadAll(audioList);
+  // await SFX.preload();
+  await BGM.preload();
+  // BGM.play();
+
+  final size = await Flame.util.initialDimensions();
   ShadowTrainingUI gameUI = ShadowTrainingUI();
-  ShadowTraining game = ShadowTraining(gameUI.state);
+  ShadowTraining game = ShadowTraining(gameUI.state, size);
+  gameUI.state.game = game;
 
   runApp(
     MaterialApp(

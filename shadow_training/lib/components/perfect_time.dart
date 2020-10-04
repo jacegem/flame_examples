@@ -1,17 +1,15 @@
 import 'dart:ui';
-
 import 'package:flame/sprite.dart';
-
 import '../shadow_training.dart';
 
-class Background {
+class PerfectTime {
   final ShadowTraining game;
   Rect rect;
   Sprite sprite;
 
-  Background(this.game) {
-    rect = Rect.fromLTWH(0, -22, 9, 22);
-    sprite = Sprite('background.png');
+  PerfectTime(this.game) {
+    rect = Rect.fromLTWH(2, -(game.screenHeight - 1.55), 4, 1.5);
+    sprite = Sprite('perfect-time.png');
   }
 
   void render(Canvas c) {
